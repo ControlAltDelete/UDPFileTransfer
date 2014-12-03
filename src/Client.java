@@ -3,7 +3,21 @@ import java.net.*;
 import java.util.ArrayList;
 class Client 
 {    
-	public static void main(String args[]) throws Exception    
+  
+    private static Client instance = null;
+    private String filename = null;
+    private ArrayList<String> files;
+    private Client()
+    {
+      
+    }
+    
+    public void openFile()
+    {
+      
+    }
+    
+	public  void runClient() throws Exception    
 	{       
 		BufferedReader inFromUser = new BufferedReader(new InputStreamReader(System.in));
 		System.out.print("Filename: ");

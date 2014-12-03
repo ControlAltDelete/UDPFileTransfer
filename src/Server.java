@@ -6,10 +6,15 @@ public class Server
 {    
     private static Server instance = null;
     
+    private Server()
+    {
+      this.runServer();
+    }
     
-	public static void main(String args[])// throws Exception       
+	public void runServer()// throws Exception       
 	{          
-		try{
+		try
+		{
 			DatagramSocket serverSocket = new DatagramSocket(9876);
 			byte[] receiveData = new byte[512];
 			byte[] sendData = new byte[512];
@@ -17,10 +22,12 @@ public class Server
 			ArrayList<String> files = new ArrayList<String>();
 			FileManipulation fm = new FileManipulation();
 			String data;
+			
 			while(true)                
 			{
 				DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
 				serverSocket.receive(receivePacket);                   
+				
 				String sentence = new String(receivePacket.getData());
 				int expectedPackets = Integer.parseInt(sentence.substring(sentence.indexOf(":")+2, sentence.lastIndexOf(":")));
 				int fileLength = Integer.parseInt(sentence.substring(sentence.indexOf(";")+2, sentence.lastIndexOf(";")));
@@ -30,11 +37,14 @@ public class Server
 				System.out.println("RECEIVED: FileSize - " + fileLength);
 				System.out.println("Incoming file will be saved as "+filename+".");
 				
-				while(currentPackets < expectedPackets){
+				while(currentPackets < expectedPackets)
+				{
 					serverSocket.receive(receivePacket);
 					System.out.println(currentPackets+" "+receivePacket.getData().length);
 					data = new String(receivePacket.getData());
-					if(currentPackets==expectedPackets-1){
+					
+					if(currentPackets==expectedPackets-1)
+					{
 						files.add(data.substring(0, fileLength%512));
 					}
 					else
@@ -49,8 +59,17 @@ public class Server
 				}
 				fm.convertToImage(files, filename);
 			}  
-		} catch (IOException e){
+		} catch (IOException e)
+		{
 		
 		}
-	} 
+	}
+	
+	public static Server getInstance()
+	{
+	  if (instance == null)
+		instance = new Server();
+	  
+	  return instance;
+	}
 }
