@@ -15,7 +15,7 @@ class Client
     
     private Client()
     {
-
+      byteSize = Server.getInstance().getByteSize();
     }
     
     public void openFile(File file) throws Exception
@@ -25,10 +25,12 @@ class Client
       files = fm.convertToBinary(file, byteSize);
       fileLength = fm.getFileLength();      
       fileIsOpened = true;
+      byteSize = Server.getInstance().getByteSize();
     }
     
 	public void runClient() throws Exception    
 	{       
+	  	byteSize = Server.getInstance().getByteSize();
 		InetAddress IPAddress = InetAddress.getByName("localhost");       
 		byte[] sendData = new byte[byteSize];       
 		byte[] receiveData = new byte[byteSize];

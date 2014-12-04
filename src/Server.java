@@ -1,6 +1,7 @@
 import java.io.*; 
 import java.net.*; 
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Server
 {    
@@ -20,8 +21,14 @@ public class Server
     
 	public void runServer()       
 	{   
-	    boolean fuckThisBoolean;
-	    fuckThisBoolean = true;
+//	    boolean fuckThisBoolean;
+//	    fuckThisBoolean = true;
+	  
+	  	System.out.print("Enter new byte size: ");
+	  	Scanner scan = new Scanner(System.in);
+	  	byteSize = scan.nextInt();
+	  	isRunning = true;
+	  	
 		try
 		{ 
 			DatagramSocket serverSocket = new DatagramSocket(9876);
@@ -69,8 +76,6 @@ public class Server
 					DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, port);
 					serverSocket.send(sendPacket);      
 					currentPackets++;
-					
-					isRunning = fuckThisBoolean;
 				}
 				
 				fm.convertToImage(files, filename);
@@ -98,8 +103,8 @@ public class Server
 	  return isRunning;
 	}
 	
-	public void setByteSize(int value)
+	public int getByteSize()
 	{
-	  byteSize = value;
+	  return byteSize;
 	}
 }

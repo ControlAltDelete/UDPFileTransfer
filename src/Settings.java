@@ -90,9 +90,6 @@ public class Settings
 		  {
 			frame.setVisible(false);
 			MainFrame.getInstance().setVisiblility(true);
-			Client.getInstance().setByteSize(Integer.parseInt(byteSizeTxtFild.getText()));
-			System.out.println(Integer.parseInt(byteSizeTxtFild.getText()));
-			Server.getInstance().setByteSize(Integer.parseInt(byteSizeTxtFild.getText()));
 		  } 
 		  
 		  catch (UnknownHostException e)
