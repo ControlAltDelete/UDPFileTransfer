@@ -68,7 +68,7 @@ public class MainFrame extends JFrame
   private void initialize() throws UnknownHostException
   {
 	setTitle("UDP File Transfer");
-	setBounds(100, 100, 450, 357);
+	setBounds(100, 100, 450, 316);
 	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	
 	JMenuBar menuBar = new JMenuBar();
@@ -104,8 +104,7 @@ public class MainFrame extends JFrame
 			  // TODO Auto-generated catch block
 			  e1.printStackTrace();
 			}
-		  }
-			
+		  }	
 		}
 	});
 	mnFile.add(mntmOpenFile);
@@ -177,16 +176,16 @@ public class MainFrame extends JFrame
 		groupLayout.createParallelGroup(Alignment.LEADING)
 			.addGroup(groupLayout.createSequentialGroup()
 				.addGap(18)
-				.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
-					.addComponent(scrollPane, Alignment.LEADING)
-					.addComponent(btnSendFile, Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE)
-					.addGroup(Alignment.LEADING, groupLayout.createSequentialGroup()
-						.addGap(235)
-						.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-							.addComponent(lblServerIsNot)
-							.addComponent(lblNoFileIs)
-							.addComponent(lblConnectedTo))))
-				.addContainerGap(25, Short.MAX_VALUE))
+				.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+					.addComponent(btnSendFile, GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE)
+					.addGroup(groupLayout.createSequentialGroup()
+						.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
+							.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 403, GroupLayout.PREFERRED_SIZE)
+							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+								.addComponent(lblNoFileIs)
+								.addComponent(lblConnectedTo)
+								.addComponent(lblServerIsNot)))
+						.addContainerGap())))
 	);
 	groupLayout.setVerticalGroup(
 		groupLayout.createParallelGroup(Alignment.LEADING)
@@ -195,13 +194,13 @@ public class MainFrame extends JFrame
 				.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 					.addComponent(btnSendFile)
 					.addComponent(lblServerIsNot))
-				.addPreferredGap(ComponentPlacement.RELATED)
+				.addGap(18)
 				.addComponent(lblNoFileIs)
 				.addGap(18)
 				.addComponent(lblConnectedTo)
-				.addGap(81)
-				.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 126, GroupLayout.PREFERRED_SIZE)
-				.addContainerGap(22, Short.MAX_VALUE))
+				.addGap(18)
+				.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 129, GroupLayout.PREFERRED_SIZE)
+				.addContainerGap(21, Short.MAX_VALUE))
 	);
 	
 	

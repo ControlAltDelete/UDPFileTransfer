@@ -8,7 +8,6 @@ public class Server
     private static Server instance = null;
     private boolean isRunning;
     private int byteSize;
-    private int newByteSize;
    
     private Server()
     {
@@ -21,6 +20,13 @@ public class Server
       serv.runServer();
     }
     
+    public int getAnInt(int something)
+    {
+      int wow = 0;
+      wow = something;
+      return wow;
+    }
+    
 	public void runServer()       
 	{   
 //	    boolean fuckThisBoolean;
@@ -29,8 +35,7 @@ public class Server
 	  	System.out.print("Enter new byte size: ");
 	  	Scanner scan = new Scanner(System.in);
 	  	byteSize = scan.nextInt();
-	  	newByteSize = byteSize;
-	  	isRunning = true;
+	  	int newByteSize = byteSize;
 	  	System.out.println(newByteSize);
 	  	
 		try
@@ -45,6 +50,7 @@ public class Server
 			
 			while(true)                
 			{
+			  	isRunning = true;
 				DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
 				serverSocket.receive(receivePacket);                   
 				

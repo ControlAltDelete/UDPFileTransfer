@@ -40,6 +40,7 @@ class Client
 		
 		DatagramSocket clientSocket = new DatagramSocket();
 		expectedPackets = new String("Expected Packets: "+files.size()+": File("+filename+") length; "+fileLength+";");
+		stringHandler.add(expectedPackets);
 		sendData = expectedPackets.getBytes();
 		DatagramPacket sendPacket = new DatagramPacket(expectedPackets.getBytes(), expectedPackets.getBytes().length, IPAddress, 9876);       
 		clientSocket.send(sendPacket);
