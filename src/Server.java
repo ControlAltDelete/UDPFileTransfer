@@ -5,19 +5,28 @@ import java.util.ArrayList;
 public class Server
 {    
     private static Server instance = null;
-    
+    private boolean isRunning;
+    private int byteSize;
+   
     private Server()
     {
-      this.runServer();
+      byteSize = 512;
     }
     
-	public void runServer()// throws Exception       
-	{          
+    public static void main(String[] args)
+    {
+      Server.getInstance().runServer();
+    }
+    
+	public void runServer()       
+	{   
+	    boolean fuckThisBoolean;
+	    fuckThisBoolean = true;
 		try
-		{
+		{ 
 			DatagramSocket serverSocket = new DatagramSocket(9876);
-			byte[] receiveData = new byte[512];
-			byte[] sendData = new byte[512];
+			byte[] receiveData = new byte[byteSize];
+			byte[] sendData = new byte[byteSize];
 			int currentPackets = 0;
 			ArrayList<String> files = new ArrayList<String>();
 			FileManipulation fm = new FileManipulation();
@@ -45,10 +54,14 @@ public class Server
 					
 					if(currentPackets==expectedPackets-1)
 					{
-						files.add(data.substring(0, fileLength%512));
+						files.add(data.substring(0, fileLength%byteSize));
 					}
+					
 					else
+					{
 						files.add(data);
+					}
+					
 					InetAddress IPAddress = receivePacket.getAddress();                   
 					int port = receivePacket.getPort();                   
 					String capitalizedSentence = new String("Received segment "+currentPackets); 
@@ -56,10 +69,15 @@ public class Server
 					DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, port);
 					serverSocket.send(sendPacket);      
 					currentPackets++;
+					
+					isRunning = fuckThisBoolean;
 				}
+				
 				fm.convertToImage(files, filename);
 			}  
-		} catch (IOException e)
+		} 
+		
+		catch (IOException e)
 		{
 		
 		}
@@ -68,8 +86,20 @@ public class Server
 	public static Server getInstance()
 	{
 	  if (instance == null)
+	  {
 		instance = new Server();
+	  }	 
 	  
 	  return instance;
+	}
+	
+	public boolean serverIsRunning()
+	{
+	  return isRunning;
+	}
+	
+	public void setByteSize(int value)
+	{
+	  byteSize = value;
 	}
 }

@@ -1,8 +1,10 @@
 import java.awt.EventQueue;
 
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
+import javax.swing.JOptionPane;
 import javax.swing.JToolBar;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
@@ -12,23 +14,30 @@ import javax.swing.JTextPane;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+
 import java.awt.Color;
+
 import javax.swing.JTabbedPane;
+
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+
 import javax.swing.JPanel;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.io.File;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import javax.swing.JTextArea;
 
 
 public class MainFrame
 {
 
   private JFrame frmUdpFileTransfer;
-
-  /**
-   * Launch the application.
-   */
+  private static MainFrame instance = null;
+  
   public static void main(String[] args)
   {
 	EventQueue.invokeLater(new Runnable()
@@ -47,18 +56,12 @@ public class MainFrame
 	});
   }
 
-  /**
-   * Create the application.
-   */
-  public MainFrame()
+  private MainFrame() throws UnknownHostException
   {
 	initialize();
   }
 
-  /**
-   * Initialize the contents of the frame.
-   */
-  private void initialize()
+  private void initialize() throws UnknownHostException
   {
 	frmUdpFileTransfer = new JFrame();
 	frmUdpFileTransfer.setTitle("UDP File Transfer");
@@ -68,10 +71,40 @@ public class MainFrame
 	JMenuBar menuBar = new JMenuBar();
 	frmUdpFileTransfer.setJMenuBar(menuBar);
 	
+	JLabel lblNoFileIs = new JLabel("No file is selected.");
+	lblNoFileIs.setForeground(Color.RED);
+	
+	JFileChooser fileChooser = new JFileChooser();
+	
 	JMenu mnFile = new JMenu("File");
 	menuBar.add(mnFile);
 	
 	JMenuItem mntmOpenFile = new JMenuItem("Open File");
+	mntmOpenFile.addActionListener(new ActionListener() {
+		public void actionPerformed(ActionEvent e) 
+		{
+		  int returnVal = fileChooser.showOpenDialog(frmUdpFileTransfer);
+		  
+		  if (returnVal == fileChooser.APPROVE_OPTION)
+		  {
+			File file = fileChooser.getSelectedFile();
+			
+			try
+			{
+			  Client.getInstance().openFile(file);
+			  lblNoFileIs.setText(file.getName());
+			  lblNoFileIs.setForeground(Color.black);
+			} 
+			
+			catch (Exception e1)
+			{
+			  // TODO Auto-generated catch block
+			  e1.printStackTrace();
+			}
+		  }
+			
+		}
+	});
 	mnFile.add(mntmOpenFile);
 	
 	JMenuItem mntmViewDownloaded = new JMenuItem("View Downloaded");
@@ -81,70 +114,104 @@ public class MainFrame
 	menuBar.add(mnEdit);
 	
 	JMenuItem mntmPreferences = new JMenuItem("Preferences");
+	mntmPreferences.addActionListener(new ActionListener() {
+		public void actionPerformed(ActionEvent e) 
+		{
+		  Settings.getInstance().setVisibility(true);
+		  frmUdpFileTransfer.setVisible(false);
+		}
+	});
 	mnEdit.add(mntmPreferences);
-	
-	JTextPane textPane = new JTextPane();
 	
 	JLabel lblServerIsNot = new JLabel("Server is not running.");
 	lblServerIsNot.setForeground(Color.RED);
 	
-	JLabel lblNoFileIs = new JLabel("No file is selected.");
-	lblNoFileIs.setForeground(Color.RED);
+	JTextArea textArea = new JTextArea();
 	
-	JButton btnOpenServer = new JButton("Open Server");
-	btnOpenServer.addActionListener(new ActionListener() {
-		public void actionPerformed(ActionEvent e) {
+	if (Server.getInstance().serverIsRunning())
+	{
+	  lblServerIsNot.setText("Server is running.");
+	  lblServerIsNot.setForeground(Color.GREEN);
+	}
+	JButton btnSendFile = new JButton("Send File");
+	btnSendFile.addActionListener(new ActionListener() {
+		public void actionPerformed(ActionEvent e) 
+		{
+		  try
+		  {
+			if (Client.getInstance().isOpened())
+			{
+			  Client.getInstance().runClient();		  
+			}
+			
+			else
+			{
+			  JOptionPane.showMessageDialog(frmUdpFileTransfer.getParent(), "File is empty.", "Error", JOptionPane.ERROR_MESSAGE);
+			}
+		  }
+		  
+		  catch (Exception e1)
+		  {
+			e1.printStackTrace();
+		  }
 		}
 	});
 	
-	JButton btnSendFile = new JButton("Send File");
+	JLabel lblConnectedTo = new JLabel();
 	
-	JLabel lblConnectedTo = new JLabel("Connected to: 127.0.0.1");
+	lblConnectedTo.setText("Connected to: " + InetAddress.getByName("localhost").toString());
 	
-	JButton btnConnect = new JButton("Connect");
 	GroupLayout groupLayout = new GroupLayout(frmUdpFileTransfer.getContentPane());
 	groupLayout.setHorizontalGroup(
 		groupLayout.createParallelGroup(Alignment.LEADING)
 			.addGroup(groupLayout.createSequentialGroup()
 				.addContainerGap()
 				.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-					.addComponent(textPane, GroupLayout.PREFERRED_SIZE, 410, GroupLayout.PREFERRED_SIZE)
-					.addGroup(groupLayout.createSequentialGroup()
-						.addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
-							.addComponent(btnConnect, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-							.addComponent(btnSendFile, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-							.addComponent(btnOpenServer, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-						.addPreferredGap(ComponentPlacement.RELATED, 211, Short.MAX_VALUE)
+					.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
+						.addComponent(btnSendFile, GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE)
+						.addPreferredGap(ComponentPlacement.RELATED, 54, Short.MAX_VALUE)
 						.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 							.addComponent(lblServerIsNot)
 							.addComponent(lblNoFileIs)
-							.addComponent(lblConnectedTo))))
-				.addContainerGap())
+							.addComponent(lblConnectedTo))
+						.addContainerGap())
+					.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
+						.addComponent(textArea, GroupLayout.PREFERRED_SIZE, 407, GroupLayout.PREFERRED_SIZE)
+						.addGap(21))))
 	);
 	groupLayout.setVerticalGroup(
 		groupLayout.createParallelGroup(Alignment.LEADING)
 			.addGroup(groupLayout.createSequentialGroup()
+				.addContainerGap()
 				.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 					.addGroup(groupLayout.createSequentialGroup()
-						.addContainerGap()
 						.addComponent(lblServerIsNot)
 						.addPreferredGap(ComponentPlacement.UNRELATED)
 						.addComponent(lblNoFileIs)
 						.addPreferredGap(ComponentPlacement.UNRELATED)
 						.addComponent(lblConnectedTo))
-					.addGroup(groupLayout.createSequentialGroup()
-						.addGap(19)
-						.addComponent(btnOpenServer)
-						.addPreferredGap(ComponentPlacement.RELATED)
-						.addComponent(btnConnect)))
-				.addPreferredGap(ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
-				.addComponent(btnSendFile)
-				.addGap(18)
-				.addComponent(textPane, GroupLayout.PREFERRED_SIZE, 142, GroupLayout.PREFERRED_SIZE)
-				.addGap(34))
+					.addComponent(btnSendFile))
+				.addGap(41)
+				.addComponent(textArea, GroupLayout.PREFERRED_SIZE, 162, GroupLayout.PREFERRED_SIZE)
+				.addContainerGap(22, Short.MAX_VALUE))
 	);
 	frmUdpFileTransfer.getContentPane().setLayout(groupLayout);
 	frmUdpFileTransfer.setResizable(false);
 	frmUdpFileTransfer.setLocationRelativeTo(null);
+  }
+  
+  public static MainFrame getInstance() throws UnknownHostException
+  {
+	if (instance == null)
+	{
+	  instance = new MainFrame();
+	}
+	
+	return instance;
+  }
+  
+  public void setVisiblility(boolean value)
+  {
+	frmUdpFileTransfer.setVisible(value);
   }
 }
