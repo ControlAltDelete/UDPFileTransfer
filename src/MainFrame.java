@@ -32,12 +32,14 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import javax.swing.JTextArea;
+import javax.swing.JScrollPane;
+import javax.swing.JScrollBar;
+import java.awt.event.AdjustmentListener;
+import java.awt.event.AdjustmentEvent;
 
 
-public class MainFrame
+public class MainFrame extends JFrame
 {
-
-  private JFrame frmUdpFileTransfer;
   private static MainFrame instance = null;
   
   public static void main(String[] args)
@@ -49,7 +51,7 @@ public class MainFrame
 		try
 		{
 		  MainFrame window = new MainFrame();
-		  window.frmUdpFileTransfer.setVisible(true);
+		  window.setVisible(true);
 		} catch (Exception e)
 		{
 		  e.printStackTrace();
@@ -65,13 +67,12 @@ public class MainFrame
 
   private void initialize() throws UnknownHostException
   {
-	frmUdpFileTransfer = new JFrame();
-	frmUdpFileTransfer.setTitle("UDP File Transfer");
-	frmUdpFileTransfer.setBounds(100, 100, 450, 365);
-	frmUdpFileTransfer.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	setTitle("UDP File Transfer");
+	setBounds(100, 100, 450, 357);
+	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	
 	JMenuBar menuBar = new JMenuBar();
-	frmUdpFileTransfer.setJMenuBar(menuBar);
+	setJMenuBar(menuBar);
 	
 	JLabel lblNoFileIs = new JLabel("No file is selected.");
 	lblNoFileIs.setForeground(Color.RED);
@@ -85,7 +86,7 @@ public class MainFrame
 	mntmOpenFile.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent e) 
 		{
-		  int returnVal = fileChooser.showOpenDialog(frmUdpFileTransfer);
+		  int returnVal = fileChooser.showOpenDialog(getParent());
 		  
 		  if (returnVal == fileChooser.APPROVE_OPTION)
 		  {
@@ -120,15 +121,15 @@ public class MainFrame
 		public void actionPerformed(ActionEvent e) 
 		{
 		  Settings.getInstance().setVisibility(true);
-		  frmUdpFileTransfer.setVisible(false);
+		  setVisible(false);
 		}
 	});
 	mnEdit.add(mntmPreferences);
 	
+	JTextArea textArea = new JTextArea();
+	
 	JLabel lblServerIsNot = new JLabel("Server is not running.");
 	lblServerIsNot.setForeground(Color.RED);
-	
-	JTextArea textArea = new JTextArea();
 	
 	if (Server.getInstance().serverIsRunning())
 	{
@@ -154,7 +155,7 @@ public class MainFrame
 			
 			else
 			{
-			  JOptionPane.showMessageDialog(frmUdpFileTransfer.getParent(), "File is empty.", "Error", JOptionPane.ERROR_MESSAGE);
+			  JOptionPane.showMessageDialog(getParent(), "File is empty.", "Error", JOptionPane.ERROR_MESSAGE);
 			}
 		  }
 		  
@@ -169,43 +170,45 @@ public class MainFrame
 	
 	lblConnectedTo.setText("Connected to: " + InetAddress.getByName("localhost").toString());
 	
-	GroupLayout groupLayout = new GroupLayout(frmUdpFileTransfer.getContentPane());
+	JScrollPane scrollPane = new JScrollPane();
+	
+	GroupLayout groupLayout = new GroupLayout(getContentPane());
 	groupLayout.setHorizontalGroup(
 		groupLayout.createParallelGroup(Alignment.LEADING)
 			.addGroup(groupLayout.createSequentialGroup()
-				.addContainerGap()
-				.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-					.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
-						.addComponent(btnSendFile, GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE)
-						.addPreferredGap(ComponentPlacement.RELATED, 54, Short.MAX_VALUE)
+				.addGap(18)
+				.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
+					.addComponent(scrollPane, Alignment.LEADING)
+					.addComponent(btnSendFile, Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE)
+					.addGroup(Alignment.LEADING, groupLayout.createSequentialGroup()
+						.addGap(235)
 						.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 							.addComponent(lblServerIsNot)
 							.addComponent(lblNoFileIs)
-							.addComponent(lblConnectedTo))
-						.addContainerGap())
-					.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
-						.addComponent(textArea, GroupLayout.PREFERRED_SIZE, 407, GroupLayout.PREFERRED_SIZE)
-						.addGap(21))))
+							.addComponent(lblConnectedTo))))
+				.addContainerGap(25, Short.MAX_VALUE))
 	);
 	groupLayout.setVerticalGroup(
 		groupLayout.createParallelGroup(Alignment.LEADING)
 			.addGroup(groupLayout.createSequentialGroup()
 				.addContainerGap()
-				.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-					.addGroup(groupLayout.createSequentialGroup()
-						.addComponent(lblServerIsNot)
-						.addPreferredGap(ComponentPlacement.UNRELATED)
-						.addComponent(lblNoFileIs)
-						.addPreferredGap(ComponentPlacement.UNRELATED)
-						.addComponent(lblConnectedTo))
-					.addComponent(btnSendFile))
-				.addGap(41)
-				.addComponent(textArea, GroupLayout.PREFERRED_SIZE, 162, GroupLayout.PREFERRED_SIZE)
+				.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+					.addComponent(btnSendFile)
+					.addComponent(lblServerIsNot))
+				.addPreferredGap(ComponentPlacement.RELATED)
+				.addComponent(lblNoFileIs)
+				.addGap(18)
+				.addComponent(lblConnectedTo)
+				.addGap(81)
+				.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 126, GroupLayout.PREFERRED_SIZE)
 				.addContainerGap(22, Short.MAX_VALUE))
 	);
-	frmUdpFileTransfer.getContentPane().setLayout(groupLayout);
-	frmUdpFileTransfer.setResizable(false);
-	frmUdpFileTransfer.setLocationRelativeTo(null);
+	
+	
+	scrollPane.setViewportView(textArea);
+	getContentPane().setLayout(groupLayout);
+	setResizable(false);
+	setLocationRelativeTo(null);
   }
   
   public static MainFrame getInstance() throws UnknownHostException
@@ -220,6 +223,6 @@ public class MainFrame
   
   public void setVisiblility(boolean value)
   {
-	frmUdpFileTransfer.setVisible(value);
+	setVisible(value);
   }
 }
