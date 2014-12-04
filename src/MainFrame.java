@@ -29,6 +29,8 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+
 import javax.swing.JTextArea;
 
 
@@ -137,11 +139,17 @@ public class MainFrame
 	btnSendFile.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent e) 
 		{
+		  ArrayList<String> strings = Client.getInstance().getStrings();
 		  try
 		  {
 			if (Client.getInstance().isOpened())
 			{
-			  Client.getInstance().runClient();		  
+			  Client.getInstance().runClient();	
+			  
+			  for (int cntr = 0; cntr < strings.size() ; cntr++)
+			  {
+				textArea.append(strings.get(cntr) + "\n");
+			  }
 			}
 			
 			else

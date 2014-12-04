@@ -1,5 +1,6 @@
 import java.awt.EventQueue;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JFrame;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -12,15 +13,17 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.net.UnknownHostException;
 
+import javax.swing.JRadioButton;
+
 
 public class Settings
 {
 
   private static Settings instance = null;
   private JFrame frame;
-  private JTextField byteSizeTxtFild;
   private JTextField textField_1;
   private JTextField textField_2;
+  private JTextField textField;
 
   /**
    * Launch the application.
@@ -67,11 +70,6 @@ public class Settings
 	frame.setBounds(100, 100, 450, 300);
 	frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	
-	JLabel lblChunksInBytes = new JLabel("Chunks in bytes:");
-	
-	byteSizeTxtFild = new JTextField();
-	byteSizeTxtFild.setColumns(10);
-	
 	JLabel lblSequenceNumber = new JLabel("Sequence number:");
 	
 	textField_1 = new JTextField();
@@ -98,44 +96,69 @@ public class Settings
 		  }
 		}
 	});
+	
+	JRadioButton rdbtnStopAndWait = new JRadioButton("Stop and Wait");
+	
+	JRadioButton rdbtnGobackn = new JRadioButton("Go-Back-N");
+	
+	ButtonGroup bGroup = new ButtonGroup();
+	bGroup.add(rdbtnStopAndWait);
+	bGroup.add(rdbtnGobackn);
+	
+	textField = new JTextField();
+	textField.setColumns(10);
 	GroupLayout groupLayout = new GroupLayout(frame.getContentPane());
 	groupLayout.setHorizontalGroup(
-		groupLayout.createParallelGroup(Alignment.LEADING)
-			.addGroup(groupLayout.createSequentialGroup()
+		groupLayout.createParallelGroup(Alignment.TRAILING)
+			.addGroup(Alignment.LEADING, groupLayout.createSequentialGroup()
 				.addContainerGap()
 				.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-					.addComponent(lblChunksInBytes)
-					.addComponent(lblSequenceNumber)
-					.addComponent(lblNewLabel))
-				.addGap(18)
-				.addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
-					.addComponent(textField_2, 0, 0, Short.MAX_VALUE)
-					.addComponent(byteSizeTxtFild, 0, 0, Short.MAX_VALUE)
-					.addComponent(textField_1, GroupLayout.DEFAULT_SIZE, 74, Short.MAX_VALUE))
-				.addContainerGap(242, Short.MAX_VALUE))
-			.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
-				.addContainerGap(326, Short.MAX_VALUE)
-				.addComponent(btnSave)
-				.addGap(19))
+					.addGroup(groupLayout.createSequentialGroup()
+						.addComponent(rdbtnGobackn)
+						.addContainerGap())
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
+							.addComponent(btnSave)
+							.addGap(37))
+						.addGroup(groupLayout.createSequentialGroup()
+							.addComponent(rdbtnStopAndWait)
+							.addContainerGap(319, Short.MAX_VALUE))
+						.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
+							.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
+								.addGroup(Alignment.LEADING, groupLayout.createSequentialGroup()
+									.addComponent(lblNewLabel)
+									.addGap(30)
+									.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+										.addGroup(groupLayout.createSequentialGroup()
+											.addComponent(textField_2, GroupLayout.PREFERRED_SIZE, 0, GroupLayout.PREFERRED_SIZE)
+											.addPreferredGap(ComponentPlacement.RELATED, 74, Short.MAX_VALUE))
+										.addComponent(textField, GroupLayout.DEFAULT_SIZE, 74, Short.MAX_VALUE)))
+								.addGroup(groupLayout.createSequentialGroup()
+									.addComponent(lblSequenceNumber)
+									.addGap(18)
+									.addComponent(textField_1, GroupLayout.DEFAULT_SIZE, 74, Short.MAX_VALUE)))
+							.addGap(242)))))
 	);
 	groupLayout.setVerticalGroup(
 		groupLayout.createParallelGroup(Alignment.LEADING)
 			.addGroup(groupLayout.createSequentialGroup()
 				.addContainerGap()
-				.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-					.addComponent(lblChunksInBytes)
-					.addComponent(byteSizeTxtFild, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-				.addGap(18)
 				.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 					.addComponent(lblSequenceNumber)
 					.addComponent(textField_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-				.addGap(18)
+				.addGap(26)
 				.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 					.addComponent(lblNewLabel)
-					.addComponent(textField_2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-				.addPreferredGap(ComponentPlacement.RELATED, 120, Short.MAX_VALUE)
+					.addComponent(textField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+				.addGap(10)
+				.addComponent(textField_2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+				.addGap(13)
+				.addComponent(rdbtnStopAndWait)
+				.addPreferredGap(ComponentPlacement.UNRELATED)
+				.addComponent(rdbtnGobackn)
+				.addPreferredGap(ComponentPlacement.RELATED, 55, Short.MAX_VALUE)
 				.addComponent(btnSave)
-				.addContainerGap())
+				.addGap(20))
 	);
 	frame.getContentPane().setLayout(groupLayout);
   }

@@ -8,6 +8,7 @@ public class Server
     private static Server instance = null;
     private boolean isRunning;
     private int byteSize;
+    private int newByteSize;
    
     private Server()
     {
@@ -16,7 +17,8 @@ public class Server
     
     public static void main(String[] args)
     {
-      Server.getInstance().runServer();
+      Server serv = new Server();
+      serv.runServer();
     }
     
 	public void runServer()       
@@ -27,7 +29,9 @@ public class Server
 	  	System.out.print("Enter new byte size: ");
 	  	Scanner scan = new Scanner(System.in);
 	  	byteSize = scan.nextInt();
+	  	newByteSize = byteSize;
 	  	isRunning = true;
+	  	System.out.println(newByteSize);
 	  	
 		try
 		{ 

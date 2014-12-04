@@ -11,11 +11,13 @@ class Client
     private String expectedPackets;
     private boolean fileIsOpened;
     private String toBePrinted;
+    private ArrayList<String> stringHandler;
     private int byteSize;
     
     private Client()
     {
       byteSize = Server.getInstance().getByteSize();
+      stringHandler = new ArrayList<String>();
     }
     
     public void openFile(File file) throws Exception
@@ -25,12 +27,11 @@ class Client
       files = fm.convertToBinary(file, byteSize);
       fileLength = fm.getFileLength();      
       fileIsOpened = true;
-      byteSize = Server.getInstance().getByteSize();
     }
     
 	public void runClient() throws Exception    
 	{       
-	  	byteSize = Server.getInstance().getByteSize();
+	    System.out.println("Received byte size from server: " + byteSize);
 		InetAddress IPAddress = InetAddress.getByName("localhost");       
 		byte[] sendData = new byte[byteSize];       
 		byte[] receiveData = new byte[byteSize];
@@ -49,6 +50,7 @@ class Client
 			toRead = toRead + sendData.length;
 			toBePrinted = "Sending "+sendData.length+" packets to Server: "+i;
 			System.out.println(toBePrinted);
+			stringHandler.add(toBePrinted);
 			
 			sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, 9876);       
 			clientSocket.send(sendPacket);       
@@ -85,6 +87,11 @@ class Client
 	public void setByteSize(int value)
 	{
 	  byteSize = value;
+	}
+	
+	public ArrayList<String> getStrings()
+	{
+	  return stringHandler;
 	}
 	
 //	File file = new File(filename);
